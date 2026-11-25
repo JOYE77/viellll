@@ -1,0 +1,178 @@
+/* slides.css — tampilan sistem slide & latar dekorasi interaktif */
+:root{--play:'Playfair Display',Georgia,serif;--round:'Quicksand',system-ui,sans-serif;--hand:'Caveat','Segoe Script',cursive;--t:#0a8fb4}
+#story{z-index:3;transition:opacity .8s;font-family:var(--round)}
+#env.gone{opacity:0;pointer-events:none}
+
+#ambient-bg{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none;opacity:.52;transition:opacity .8s ease}
+.amb-node{position:absolute;pointer-events:auto;cursor:pointer;border-radius:999px;transition:filter .35s ease;will-change:transform}
+.amb-node:hover{filter:drop-shadow(0 0 14px rgba(34,211,238,.55))}
+.amb-node.pop-active .dec-item{animation:ambPop .68s cubic-bezier(.2,1.4,.35,1)}
+@keyframes ambPop{
+  0%{scale:1}
+  45%{scale:1.24}
+  100%{scale:1}
+}
+.dec-item{display:block;width:100%;height:auto;object-fit:contain;opacity:.9;filter:drop-shadow(0 8px 16px rgba(14,116,144,.2));mix-blend-mode:multiply;user-select:none;-webkit-user-drag:none}
+.dec-item.is-svg{mix-blend-mode:normal;opacity:.92}
+
+.dec-float{animation:decFloat var(--dur,9s) var(--del,0s) ease-in-out infinite}
+.dec-drift{animation:decDrift var(--dur,12s) var(--del,0s) ease-in-out infinite alternate}
+@keyframes decFloat{
+  0%,100%{transform:translate(var(--px,0px),var(--py,0px)) rotate(var(--rot,0deg))}
+  50%{transform:translate(calc(var(--px,0px) + var(--mx,12px)),calc(var(--py,0px) + var(--my,-16px))) rotate(calc(var(--rot,0deg) + 5deg))}
+}
+@keyframes decDrift{
+  0%{transform:translate(var(--px,0px),var(--py,0px)) rotate(calc(var(--rot,0deg) - 4deg))}
+  50%{transform:translate(calc(var(--px,0px) + var(--mx,24px)),calc(var(--py,0px) + var(--my,-14px))) rotate(calc(var(--rot,0deg) + 4deg))}
+  100%{transform:translate(calc(var(--px,0px) + var(--mx,24px) * -.5),calc(var(--py,0px) + var(--my,-14px) * .6)) rotate(calc(var(--rot,0deg) - 3deg))}
+}
+
+/* Balon pesan singkat saat hiasan di background diklik */
+#bg-whisper{position:fixed;z-index:25;translate:-50% -50%;pointer-events:none;
+  padding:8px 14px;border-radius:14px;background:rgba(11,43,59,.92);color:#e0fbff;
+  font:600 12.5px/1.35 var(--round);white-space:nowrap;max-width:min(280px,82vw);
+  box-shadow:0 10px 24px rgba(11,43,59,.35);opacity:0;transform:translateY(6px) scale(.94);
+  transition:opacity .28s ease,transform .32s cubic-bezier(.2,1.3,.4,1)}
+#bg-whisper.show{opacity:1;transform:translateY(0) scale(1)}
+
+/* Percikan saat hiasan latar diklik */
+.bg-sparkle{position:fixed;z-index:22;pointer-events:none;font-size:15px;translate:-50% -50%;
+  animation:bgSpark .82s cubic-bezier(.16,.85,.3,1) forwards}
+@keyframes bgSpark{
+  0%{opacity:1;transform:translate(0,0) scale(.5)}
+  100%{opacity:0;transform:translate(var(--tx,20px),var(--ty,-30px)) scale(1.2)}
+}
+
+/* hati melayang & titik slide */
+#hearts{position:fixed;inset:0;z-index:1;overflow:hidden;pointer-events:none;opacity:0;transition:opacity 1.5s}
+#hearts.on{opacity:1}
+#hearts i{position:absolute;bottom:-30px;font-style:normal;opacity:0;animation:hup linear infinite}
+@keyframes hup{0%{transform:translateY(0) rotate(0);opacity:0}15%{opacity:.75}100%{transform:translateY(-112vh) rotate(40deg);opacity:0}}
+#dots{position:fixed;right:10px;top:50%;translate:0 -50%;display:flex;flex-direction:column;gap:9px;z-index:4}
+#dots i{width:6px;height:6px;border-radius:50%;background:#ffffffb0;transition:all .4s}
+#dots i.d{background:#7dd3fc}
+#dots i.a{height:18px;border-radius:4px;background:var(--accent);box-shadow:0 0 10px #22d3eeaa}
+
+/* slide umum */
+.sl{position:absolute;inset:0;z-index:2;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  max-width:460px;margin:0 auto;padding:24px 26px;text-align:center;pointer-events:none}
+.sl.on{display:flex}
+.sl.on > *{pointer-events:auto}
+.st{font:700 clamp(26px,7vw,34px)/1.15 var(--play);color:var(--t)}
+.ss{font-size:13px;font-weight:500;line-height:1.5;color:#4f8798;max-width:300px}
+.go{display:flex;align-items:center;gap:8px;font-family:var(--round);font-weight:700;background:linear-gradient(135deg,#22d3ee,#0891b2)}
+.go b{font-weight:700}
+.hand{font-family:var(--hand)}
+
+/* pembagi halaman teks */
+.pgt{font-size:13.5px;line-height:1.65;color:#4a6d79;max-height:34vh;overflow:auto;text-align:left}
+.pgt p+p{margin-top:9px}
+.pgt.flip{animation:flip .5s ease-out}
+@keyframes flip{from{opacity:0;transform:translateX(14px)}}
+.pgn{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:10px}
+.pgn button{width:26px;height:26px;border:0;border-radius:50%;background:#e3f7fc;color:var(--t);font-size:16px;line-height:26px;padding:0;cursor:pointer}
+.pd i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#bde6ef;margin:0 3px;transition:all .3s}
+.pd i.a{width:16px;border-radius:4px;background:var(--accent)}
+
+/* 1. kartu ucapan */
+.gcard{position:relative;width:min(330px,88vw);margin-top:20px;padding:34px 20px 14px;background:#fff;border-radius:20px;box-shadow:0 18px 40px #0e749040}
+.gage{position:absolute;left:50%;top:-22px;translate:-50% 0;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  font:700 20px var(--play);color:#fff;background:linear-gradient(135deg,#22d3ee,#0891b2);box-shadow:0 8px 16px #06b6d466}
+.gball{position:absolute;right:12px;top:-24px;font-size:30px;animation:float 5s ease-in-out infinite}
+.gcard small{display:block;font:600 17px var(--hand);color:var(--soft)}
+.gcard h3{font:700 25px/1.15 var(--play);color:var(--t);margin:2px 0 10px}
+
+/* 2. diary */
+.dwrap{position:relative;width:min(300px,84vw)}
+.book{position:relative;height:190px;border-radius:12px 22px 22px 12px;cursor:pointer;background:linear-gradient(135deg,#1e9ad6,#0b5fa5);
+  box-shadow:0 18px 30px #0b5fa566,inset 9px 0 0 #0b4a85}
+.bin{position:absolute;inset:14px 14px 14px 24px;border:1px solid #ffffff55;border-radius:12px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;color:#fff}
+.bin b{font:600 17px var(--play)}
+.lock{font-size:28px;display:block}
+.bin small{font-size:9px;letter-spacing:.2em;color:#ffffffcc}
+.paper{padding:16px 16px 12px 24px;text-align:left;border-radius:6px 14px 14px 6px;box-shadow:0 14px 28px #0e749040,inset 7px 0 0 #e1f4f9;
+  background:#fbfeff repeating-linear-gradient(transparent 0 25px,#d3ecf3 25px 26px)}
+.sal{font:600 21px var(--hand);color:var(--t)}
+.paper .pgt{font:500 18px/26px var(--hand);color:#1a3340;max-height:min(40vh,320px)}
+.paper .pgt p+p{margin-top:0;text-indent:0}
+.paper.hide{display:none}
+.sig{font:600 19px var(--hand);color:var(--t);text-align:right;transition:opacity .4s}
+
+/* 3. foto */
+.stack{position:relative;width:min(250px,68vw);height:min(330px,44vh);touch-action:none}
+.pc{position:absolute;inset:0;display:flex;flex-direction:column;padding:10px 10px 0;background:#fff;border-radius:4px;
+  box-shadow:0 12px 26px #0e749040;cursor:grab;touch-action:none;user-select:none}
+.pc .ph{flex:1;min-height:0;display:grid;place-items:center;overflow:hidden;color:#fff;font-size:34px;line-height:1.2;
+  background:linear-gradient(135deg,#bdeefa,#7dd3fc)}
+.pc .ph small{display:block;font:italic 14px var(--serif)}
+.pc img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.pc em{font:600 20px var(--hand);font-style:normal;color:#1a3340;padding:9px 0 11px}
+
+/* 4. kue */
+.cakebox{position:relative;width:min(250px,68vw);aspect-ratio:240/230}
+.half{position:absolute;inset:0;transition:transform .8s cubic-bezier(.3,1.3,.4,1)}
+.half.l{clip-path:inset(0 50% 0 0)}
+.half.r{clip-path:inset(0 0 0 50%)}
+.half svg{width:100%;height:100%;overflow:visible}
+.cut .half.l{transform:translateX(-9px) rotate(-1.5deg)}
+.cut .half.r{transform:translateX(9px) rotate(1.5deg)}
+.flame{transform-box:fill-box;transform-origin:50% 100%;animation:flick .5s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scale(.88,1.12) rotate(4deg)}}
+.cut .flame{animation:none;opacity:0;transition:opacity .3s}
+.cutline{position:absolute;left:50%;top:27%;height:65%;border-left:2px dashed #07485e;--p:0;clip-path:inset(0 0 calc(100% - var(--p) * 100%) 0)}
+.knife{position:absolute;left:50%;top:-26%;width:9%;translate:-50% 0;filter:drop-shadow(0 4px 4px #0003)}
+.knife svg{display:block;width:100%}
+.cut .knife{opacity:0;transition:opacity .6s .4s}
+.kbar{position:relative;width:min(280px,76vw);height:46px;border:1.5px dashed #7fd0e4;border-radius:99px;display:grid;place-items:center;
+  font-size:12px;font-weight:600;color:var(--t);overflow:hidden;--f:0}
+.kbar::before{content:"";position:absolute;left:0;top:0;bottom:0;width:calc(var(--f) * 100%);background:#bdeefa}
+.kbar span{position:relative}
+.kh{position:absolute;left:4px;top:3px;width:36px;height:36px;border-radius:50%;background:#fff;display:grid;place-items:center;
+  font-size:18px;cursor:grab;touch-action:none;box-shadow:0 3px 8px #0e749040}
+
+/* 5. harapan — teks harapan dipaskan agar rapi & nyaman dibaca tanpa terpotong */
+.sl-wishes{gap:10px;padding:18px 20px}
+.wbox{position:relative;width:min(330px,88vw);height:clamp(120px,20vh,165px);border:1.5px dashed #7fd0e4;border-radius:22px;overflow:hidden}
+.bub{position:absolute;left:0;top:0;border:0;padding:8px 15px;border-radius:99px;font:700 12px var(--round);color:#0b6a86;cursor:pointer;white-space:nowrap;
+  background:radial-gradient(circle at 30% 25%,#fff,#ffffffaa 40%,#bff0fb88);box-shadow:inset 0 -3px 8px #7dd3fc66,0 6px 14px #0e749030}
+.wcard{width:min(330px,88vw);min-height:110px;max-height:33vh;overflow-y:auto;padding:16px 18px;background:#fff;border-radius:18px;
+  box-shadow:0 10px 24px #0e749030;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:6px;
+  scrollbar-width:thin;scrollbar-color:#7dd3fc transparent}
+.wcard::-webkit-scrollbar{width:5px}
+.wcard::-webkit-scrollbar-thumb{background:#7dd3fc;border-radius:99px}
+.wspark{font-size:13px;line-height:1;flex-shrink:0}
+.wt{font:600 14.5px/1.55 var(--round);color:#134e5e;text-align:center;word-break:break-word;margin:auto 0}
+.wh{font-size:13px;font-weight:600;color:#6aa5b5;margin:auto 0}
+.whb{font:700 21px var(--play);color:var(--t);margin-top:2px}
+.wsig{font:600 9px var(--round);letter-spacing:.25em;color:#78a5b2;text-transform:uppercase}
+.wcnt{font-size:11px;color:#78a5b2}
+.bh{position:fixed;z-index:20;pointer-events:none;font-size:16px}
+
+/* 6. kado */
+.gift{position:relative;width:min(230px,62vw);margin-top:clamp(60px,12vh,100px);cursor:pointer}
+.gift svg{position:relative;z-index:1;display:block;width:100%;overflow:visible}
+.lid{transform-box:fill-box;transform-origin:center;transition:transform .9s cubic-bezier(.3,1.4,.4,1),opacity .7s ease .15s}
+.gift.open .lid{transform:translate(78px,-120px) rotate(28deg);opacity:0}
+.gift.open{cursor:default}
+/* buket keluar dari dalam kotak (di belakang badan kotak, di atas tutup yang sudah terbang) */
+.gbq{position:absolute;z-index:0;left:50%;bottom:12%;width:82%;height:auto;max-height:none;object-fit:contain;
+  transform-origin:50% 100%;transform:translate(-50%,22%) scale(.5);opacity:0;pointer-events:none;user-select:none;
+  filter:drop-shadow(0 12px 18px rgba(14,116,144,.28));
+  transition:transform 1.5s cubic-bezier(.2,1.25,.35,1) .35s,opacity .6s ease .35s}
+.gift.open .gbq{transform:translate(-50%,-10%) scale(1);opacity:1;animation:gbqBob 4s 2s ease-in-out infinite}
+@keyframes gbqBob{0%,100%{translate:0 0}50%{translate:0 -7px}}
+.gift .glow{position:absolute;left:50%;top:48%;width:20px;height:20px;border-radius:50%;translate:-50% -50%;
+  background:radial-gradient(#fff,#fff0 70%);opacity:0;pointer-events:none}
+.gift.open .glow{animation:glow2 1.6s ease-out both}
+@keyframes glow2{from{opacity:1;scale:1}to{opacity:0;scale:22}}
+
+/* 7. penutup */
+.big{font:700 clamp(28px,8vw,40px)/1.15 var(--play);color:var(--t)}
+.gcard2{width:min(320px,86vw);padding:16px;background:#fff;border-radius:18px;box-shadow:0 14px 30px #0e749035}
+.gcard2 img{display:block;width:100%;height:250px;object-fit:contain;border-radius:10px;margin-bottom:10px;animation:bouquetBob 4.5s ease-in-out infinite}
+@keyframes bouquetBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-6px) scale(1.02)}}
+.gcard2 .em{font-size:38px}
+.gcard2 h3{font:700 20px var(--play);color:var(--t)}
+.gcard2 p{font-size:13.5px;color:#4a6d79;margin-top:4px}
+.close{font:600 26px var(--hand);color:var(--t)}
